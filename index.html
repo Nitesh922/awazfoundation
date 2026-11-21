@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>हमारी गैलरी — डेमो</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --primary: #14365d;
+      --accent: #0f766e;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header {
+      background: var(--primary);
+      color: #ffffff;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .brand p {
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .nav-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .btn-light {
+      background: #ffffff;
+      color: var(--primary);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: #ffffff;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 18px;
+    }
+
+    .post-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .post-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+      background: #e5e7eb;
+    }
+
+    .post-body {
+      padding: 14px;
+    }
+
+    .post-date {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .post-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .post-desc {
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .admin-actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .empty-msg {
+      background: var(--card);
+      border: 1px dashed var(--border);
+      padding: 24px;
+      border-radius: 12px;
+      text-align: center;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1 id="appName">हमारी गैलरी</h1>
+      <p>पब्लिक अपडेट्स और फ़ोटो संग्रह</p>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-light" onclick="showPublicView()">पब्लिक व्यू</button>
+      <button class="btn-accent" onclick="openAdminGate()">एडमिन पैनल</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- एडमिन पिन बॉक्स -->
+    <section id="pinPanel" class="panel">
+      <h2 class="section-title">एडमिन लॉगिन</h2>
+      <div class="form-group">
+        <label for="adminPin">एडमिन पिन दर्ज करें (डेमो पिन: 1234)</label>
+        <input type="password" id="adminPin" placeholder="पिन डालें" />
+      </div>
+      <button class="btn-accent" onclick="verifyPin()">लॉगिन करें</button>
+    </section>
+
+    <!-- एडमिन अपलोड पैनल -->
+    <section id="adminPanel" class="panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h2 class="section-title" style="margin:0;">नई फ़ोटो और जानकारी अपलोड करें</h2>
+        <button class="btn-danger" onclick="logoutAdmin()">लॉगआउट</button>
+      </div>
+
+      <form id="uploadForm">
+        <div class="form-group">
+          <label for="photoInput">फ़ोटो चुनें</label>
+          <input type="file" id="photoInput" accept="image/*" required />
+        </div>
+
+        <div class="form-group">
+          <label for="titleInput">शीर्षक</label>
+          <input type="text" id="titleInput" placeholder="जैसे: नया कार्यक्रम या गतिविधि" required />
+        </div>
+
+        <div class="form-group">
+          <label for="dateInput">तारीख</label>
+          <input type="date" id="dateInput" required />
+        </div>
+
+        <div class="form-group">
+          <label for="descInput">विवरण</label>
+          <textarea id="descInput" placeholder="फ़ोटो या अपडेट के बारे में संक्षिप्त जानकारी लिखें..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-accent">पब्लिक में प्रकाशित करें</button>
+      </form>
+    </section>
+
+    <!-- पब्लिक फ़ीड -->
+    <section id="publicSection">
+      <h2 class="section-title">ताज़ा फ़ोटो और जानकारी</h2>
+      <div id="postsGrid" class="grid"></div>
+    </section>
+  </main>
+
+  <script>
+    const ADMIN_PIN = "1234";
+    const STORAGE_KEY = "hamari_gallery_posts_v1";
+    let isAdminLoggedIn = false;
+
+    document.getElementById("dateInput").valueAsDate = new Date();
+
+    function getPosts() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function savePosts(posts) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+    }
+
+    function showPublicView() {
+      document.getElementById("pinPanel").classList.remove("active");
+      document.getElementById("adminPanel").classList.remove("active");
+      renderPosts();
+    }
+
+    function openAdminGate() {
+      if (isAdminLoggedIn) {
+        document.getElementById("pinPanel").classList.remove("active");
+        document.getElementById("adminPanel").classList.add("active");
+      } else {
+        document.getElementById("adminPanel").classList.remove("active");
+        document.getElementById("pinPanel").classList.add("active");
+      }
+      renderPosts();
+    }
+
+    function verifyPin() {
+      const entered = document.getElementById("adminPin").value.trim();
+      if (entered === ADMIN_PIN) {
+        isAdminLoggedIn = true;
+        document.getElementById("adminPin").value = "";
+        document.getElementById("pinPanel").classList.remove("active");
+        document.getElementById("adminPanel").classList.add("active");
+        renderPosts();
+      } else {
+        alert("गलत पिन। कृपया सही पिन डालें।");
+      }
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      document.getElementById("adminPanel").classList.remove("active");
+      renderPosts();
+    }
+
+    function deletePost(id) {
+      if (!isAdminLoggedIn) return;
+      const updated = getPosts().filter((item) => item.id !== id);
+      savePosts(updated);
+      renderPosts();
+    }
+
+    document.getElementById("uploadForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!isAdminLoggedIn) return;
+
+      const file = document.getElementById("photoInput").files[0];
+      const title = document.getElementById("titleInput").value.trim();
+      const date = document.getElementById("dateInput").value;
+      const desc = document.getElementById("descInput").value.trim();
+
+      if (!file || !title || !date || !desc) return;
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const posts = getPosts();
+        posts.unshift({
+          id: Date.now(),
+          image: reader.result,
+          title,
+          date,
+          desc
+        });
+        savePosts(posts);
+        document.getElementById("uploadForm").reset();
+        document.getElementById("dateInput").valueAsDate = new Date();
+        renderPosts();
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function renderPosts() {
+      const grid = document.getElementById("postsGrid");
+      const posts = getPosts();
+
+      if (posts.length === 0) {
+        grid.innerHTML = `<div class="empty-msg">अभी कोई फ़ोटो या जानकारी प्रकाशित नहीं हुई है। एडमिन पैनल से पहली पोस्ट जोड़ें।</div>`;
+        return;
+      }
+
+      grid.innerHTML = posts
+        .map(
+          (post) => `
+          <article class="post-card">
+            <img src="${post.image}" alt="${escapeHtml(post.title)}" />
+            <div class="post-body">
+              <div class="post-date">${escapeHtml(post.date)}</div>
+              <h3 class="post-title">${escapeHtml(post.title)}</h3>
+              <p class="post-desc">${escapeHtml(post.desc)}</p>
+              ${
+                isAdminLoggedIn
+                  ? `<div class="admin-actions">
+                       <button class="btn-danger" onclick="deletePost(${post.id})">हटाएं</button>
+                     </div>`
+                  : ""
+              }
+            </div>
+          </article>
+        `
+        )
+        .join("");
+    }
+
+    renderPosts();
+  </script>
+</body>
+</html>

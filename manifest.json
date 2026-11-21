@@ -1,0 +1,12 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Awaz Foundation",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Awaz Foundation",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "description": "सामाजिक संस्था जो लोगों और अन्य सभी जीवों के लिए आवाज़ उठाने और मदद करने के लिए समर्पित है।"
+}
